@@ -1,0 +1,11 @@
+{
+	"name": "handle-exception",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "Src/",
+	"projects": [],
+	"dependencies": {
+		"github.com/hashload/horse": "^1.6.8"
+	}
+}
