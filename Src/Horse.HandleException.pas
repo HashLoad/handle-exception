@@ -1,18 +1,18 @@
-unit Horse.HandleExcept;
+unit Horse.HandleException;
 
 interface
 
 uses
   Horse, System.SysUtils;
 
-procedure HandleExcept(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
 uses
   System.JSON;
 
-procedure HandleExcept(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   LJSON: TJSONObject;
 begin
