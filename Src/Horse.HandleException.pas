@@ -19,6 +19,9 @@ begin
   try
     Next();
   except
+    on E: EHorseCallbackInterrupted do
+      raise;
+    
     on E: Exception do
     begin
       LJSON := TJSONObject.Create;

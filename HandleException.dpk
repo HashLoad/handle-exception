@@ -32,6 +32,6 @@ requires
   rtl;
 
 contains
-  Horse.HandleExcept in 'Src\Horse.HandleExcept.pas';
+  Horse.HandleException in 'Src\Horse.HandleException.pas';
 
 end.
