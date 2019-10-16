@@ -1,0 +1,13 @@
+{
+	"name": "samples",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"github.com/HashLoad/handle-exception": "^0.1.2",
+		"github.com/HashLoad/horse": "^1.6.8",
+		"github.com/hashload/jhonson": "^1.0.3"
+	}
+}
