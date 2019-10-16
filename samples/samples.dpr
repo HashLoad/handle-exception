@@ -22,7 +22,7 @@ begin
   App.Get('ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
-      raise Exception.Create('Meu erro personalizado!');
+      raise Exception.Create('My Error!');
     end);
 
   App.Start;
