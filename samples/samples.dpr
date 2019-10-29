@@ -1,9 +1,14 @@
-# handle-exception
-Middleware for handle exception in HORSE
+program samples;
 
-Sample Horse Server
-```delphi
-uses Horse, Horse.Jhonson, Horse.HandleException, System.SysUtils;
+{$APPTYPE CONSOLE}
+
+uses
+  Horse,
+  Horse.Jhonson,
+  Horse.HandleException,
+  System.SysUtils;
+
+{$R *.res}
 
 var
   App: THorse;
@@ -22,4 +27,3 @@ begin
 
   App.Start;
 end.
-```

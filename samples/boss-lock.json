@@ -1,7 +1,15 @@
 {
-	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2019-09-03T14:09:33.1801588-03:00",
+	"hash": "6ef9161b900632671022358216c7dfe7",
+	"updated": "2019-10-15T22:07:14.0506259-03:00",
 	"installedModules": {
+		"github.com/hashload/handle-exception": {
+			"name": "handle-exception",
+			"version": "0.1.2",
+			"hash": "519df8be252fbda605e46bef8d604915",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
 		"github.com/hashload/horse": {
 			"name": "horse",
 			"version": "1.6.8",
