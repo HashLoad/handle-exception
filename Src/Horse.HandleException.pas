@@ -8,7 +8,7 @@ procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
-uses System.JSON;
+uses System.JSON, System.TypInfo;
 
 procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
@@ -24,6 +24,24 @@ begin
     begin
       LJSON := TJSONObject.Create;
       LJSON.AddPair('error', E.Error);
+
+      if not E.Title.Trim.IsEmpty then
+      begin
+        LJSON.AddPair('title', E.Title);
+      end;
+
+      if not E.&Unit.Trim.IsEmpty then
+      begin
+        LJSON.AddPair('unit', E.&Unit);
+      end;
+
+      if E.Code <> 0 then
+      begin
+        LJSON.AddPair('code', TJSONNumber.Create(E.Code));
+      end;
+
+      LJSON.AddPair('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
+
       Res.Send<TJSONObject>(LJSON).Status(E.Status);
     end;
 
