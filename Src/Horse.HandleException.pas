@@ -1,16 +1,34 @@
 unit Horse.HandleException;
-
+{$IF DEFINED(FPC)}
+{$MODE DELPHI}{$H+}
+{$ENDIF}
 interface
 
-uses Horse, Horse.Commons, System.SysUtils;
+uses
+  {$IF DEFINED(FPC)}
+    SysUtils,
+  {$ELSE}
+    System.SysUtils,
+  {$ENDIF}
+  Horse, Horse.Commons;
 
-procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: {$IF DEFINED(FPC)}TNextProc{$ELSE}TProc{$ENDIF});
 
 implementation
 
-uses System.JSON, System.TypInfo;
+uses
+  {$IF DEFINED(FPC)}
+    fpjson, TypInfo;
+  {$ELSE}
+    System.JSON, System.TypInfo;
+  {$ENDIF}
 
-procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure SendError(ARes:THorseResponse; AJson: TJSONObject; AStatus: Integer);
+begin
+  ARes.Send<TJSONObject>(AJson).Status(AStatus);
+end;
+
+procedure HandleException(Req: THorseRequest; Res: THorseResponse; Next: {$IF DEFINED(FPC)}TNextProc{$ELSE}TProc{$ENDIF});
 var
   LJSON: TJSONObject;
 begin
@@ -23,34 +41,34 @@ begin
     on E: EHorseException do
     begin
       LJSON := TJSONObject.Create;
-      LJSON.AddPair('error', E.Error);
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Error);
 
       if not E.Title.Trim.IsEmpty then
       begin
-        LJSON.AddPair('title', E.Title);
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('title', E.Title);
       end;
 
       if not E.&Unit.Trim.IsEmpty then
       begin
-        LJSON.AddPair('unit', E.&Unit);
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('unit', E.&Unit);
       end;
 
       if E.Code <> 0 then
       begin
-        LJSON.AddPair('code', TJSONNumber.Create(E.Code));
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('code', {$IF DEFINED(FPC)}TJSONIntegerNumber{$ELSE}TJSONNumber{$ENDIF}.Create(E.Code));
       end;
 
-      LJSON.AddPair('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
 
-      Res.Send<TJSONObject>(LJSON).Status(E.Status);
+      SendError(Res, LJSON, E.Code);
     end;
 
     on E: Exception do
     begin
       LJSON := TJSONObject.Create;
-      LJSON.AddPair('error', E.ClassName);
-      LJSON.AddPair('description', E.Message);
-      Res.Send<TJSONObject>(LJSON).Status(THTTPStatus.BadRequest);
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.ClassName);
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('description', E.Message);
+      SendError(Res, LJSON, Integer(THTTPStatus.BadRequest));
     end;
   end;
 end;
