@@ -1,29 +1,20 @@
 program samples;
 
 {$APPTYPE CONSOLE}
-
-uses
-  Horse,
-  Horse.Jhonson,
-  Horse.HandleException,
-  System.SysUtils;
-
 {$R *.res}
 
-var
-  App: THorse;
+uses Horse, Horse.Jhonson, Horse.HandleException, System.SysUtils;
 
 begin
-  App := THorse.Create(9000);
+  THorse
+    .Use(Jhonson)
+    .Use(HandleException);
 
-  App.Use(Jhonson);
-  App.Use(HandleException);
-
-  App.Get('ping',
+  THorse.Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
-      raise Exception.Create('My Error!');
+      raise EHorseException.Create('My Error!');
     end);
 
-  App.Start;
+  THorse.Listen(9000);
 end.
