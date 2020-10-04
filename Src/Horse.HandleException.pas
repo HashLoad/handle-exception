@@ -69,9 +69,8 @@ begin
     on E: Exception do
     begin
       LJSON := TJSONObject.Create;
-      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.ClassName);
-      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('description', E.Message);
-      SendError(Res, LJSON, Integer(THTTPStatus.BadRequest));
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Message);
+      SendError(Res, LJSON, Integer(THTTPStatus.InternalServerError));
     end;
   end;
 end;
