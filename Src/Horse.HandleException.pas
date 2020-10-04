@@ -1,14 +1,16 @@
 unit Horse.HandleException;
+
 {$IF DEFINED(FPC)}
 {$MODE DELPHI}{$H+}
 {$ENDIF}
+
 interface
 
 uses
   {$IF DEFINED(FPC)}
-    SysUtils,
+  SysUtils,
   {$ELSE}
-    System.SysUtils,
+  System.SysUtils,
   {$ENDIF}
   Horse, Horse.Commons;
 
@@ -18,9 +20,9 @@ implementation
 
 uses
   {$IF DEFINED(FPC)}
-    fpjson, TypInfo;
+  fpjson, TypInfo;
   {$ELSE}
-    System.JSON, System.TypInfo;
+  System.JSON, System.TypInfo;
   {$ENDIF}
 
 procedure SendError(ARes:THorseResponse; AJson: TJSONObject; AStatus: Integer);
@@ -58,7 +60,7 @@ begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('code', {$IF DEFINED(FPC)}TJSONIntegerNumber{$ELSE}TJSONNumber{$ENDIF}.Create(E.Code));
       end;
 
-      if E.&Type <> TMessageType.Error then
+      if E.&Type <> TMessageType.Default then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
       end;
