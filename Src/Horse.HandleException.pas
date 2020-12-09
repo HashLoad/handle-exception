@@ -39,35 +39,28 @@ begin
   except
     on E: EHorseCallbackInterrupted do
       raise;
-
     on E: EHorseException do
     begin
       LJSON := TJSONObject.Create;
       LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Error);
-
       if not E.Title.Trim.IsEmpty then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('title', E.Title);
       end;
-
       if not E.&Unit.Trim.IsEmpty then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('unit', E.&Unit);
       end;
-
       if E.Code <> 0 then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('code', {$IF DEFINED(FPC)}TJSONIntegerNumber{$ELSE}TJSONNumber{$ENDIF}.Create(E.Code));
       end;
-
       if E.&Type <> TMessageType.Default then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
       end;
-
       SendError(Res, LJSON, E.Code);
     end;
-
     on E: Exception do
     begin
       LJSON := TJSONObject.Create;

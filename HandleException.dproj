@@ -58,7 +58,7 @@
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
         <SanitizedProjectName>HandleException</SanitizedProjectName>
-        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\horse\src;modules\jhonson\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(DCC_UnitSearchPath);modules\.dcp;modules\.dcu;modules;modules\horse\src;modules\jhonson\src</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
