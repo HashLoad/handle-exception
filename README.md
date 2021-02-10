@@ -7,8 +7,8 @@ uses Horse, Horse.Jhonson, Horse.HandleException, System.SysUtils;
 
 begin
   THorse
-    .Use( Jhonson() )
-    .Use( HandleException );
+    .Use(Jhonson())
+    .Use(HandleException);
 
   THorse.Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
