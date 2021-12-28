@@ -25,7 +25,7 @@ This middleware is compatible with projects developed in:
 - [X] Delphi
 - [X] Lazarus
 
-## ⚡️ Quickstart
+## ⚡️ Quickstart Delphi
 ```delphi
 uses 
   Horse, 
@@ -48,6 +48,37 @@ begin
 
   THorse.Listen(9000);
 end;
+```
+
+## ⚡️ Quickstart Lazarus
+```delphi
+{$MODE DELPHI}{$H+}
+
+uses
+  {$IFDEF UNIX}{$IFDEF UseCThreads}
+  cthreads,
+  {$ENDIF}{$ENDIF}
+  Horse,
+  Horse.Jhonson, // It's necessary to use the unit
+  Horse.HandleException, // It's necessary to use the unit
+  SysUtils;
+
+procedure GetPing(Req: THorseRequest; Res: THorseResponse; Next: TNextProc);
+begin
+  // Manage your exceptions:
+  raise EHorseException.Create('My Error');
+end;
+
+begin
+  // It's necessary to add the middlewares in the Horse:
+  THorse
+    .Use(Jhonson) // It has to be before the exceptions middleware
+    .Use(HandleException);
+
+  THorse.Get('/ping', GetPing);
+
+  THorse.Listen(9000);
+end.
 ```
 
 ## ⚠️ License
