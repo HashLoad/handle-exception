@@ -69,7 +69,7 @@ begin
         LStatus := Integer(THTTPStatus.InternalServerError);
       LJSON := TJSONObject.Create;
       LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Message);
-      SendError(Res, LJSON, LStatus);
+      SendError(Res, LJSON, Integer(E.Status));
     end;
   end;
 end;
