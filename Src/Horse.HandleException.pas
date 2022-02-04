@@ -60,7 +60,7 @@ begin
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
       end;
-      SendError(Res, LJSON, E.Code);
+      SendError(Res, LJSON, Integer(E.Status));
     end;
     on E: Exception do
     begin
