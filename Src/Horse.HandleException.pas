@@ -27,6 +27,10 @@ uses
 
 procedure SendError(ARes:THorseResponse; AJson: TJSONObject; AStatus: Integer);
 begin
+  Writeln(
+    Format('Internal Exception: %s', [AJson.GetValue<string>('error')])
+  );
+
   ARes.Send<TJSONObject>(AJson).Status(AStatus);
 end;
 
