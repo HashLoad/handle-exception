@@ -43,7 +43,7 @@ begin
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
       // Manage your exceptions:
-      raise EHorseException.Create('My Error!');
+      raise EHorseException.New.Error('My Error!');
     end);
 
   THorse.Listen(9000);
@@ -66,7 +66,7 @@ uses
 procedure GetPing(Req: THorseRequest; Res: THorseResponse; Next: TNextProc);
 begin
   // Manage your exceptions:
-  raise EHorseException.Create('My Error');
+  raise EHorseException.New.Error('My Error!');
 end;
 
 begin
