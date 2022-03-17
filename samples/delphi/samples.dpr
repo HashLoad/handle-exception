@@ -13,7 +13,7 @@ begin
   THorse.Get('/ping',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
-      raise EHorseException.Create('My Error!');
+      raise EHorseException.New.Error('My Error!');
     end);
 
   THorse.Listen(9000);

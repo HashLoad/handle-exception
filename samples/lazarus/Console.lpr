@@ -13,12 +13,7 @@ uses
 
 procedure GetPing(Req: THorseRequest; Res: THorseResponse; Next: TNextProc);
 begin
-  raise EHorseException.Create('My Error');
-end;
-
-procedure OnListen(Horse: THorse);
-begin
-  Writeln(Format('Server is runing on %s:%d', [Horse.Host, Horse.Port]));
+  raise EHorseException.New.Error('My Error!');
 end;
 
 begin
@@ -28,5 +23,5 @@ begin
 
   THorse.Get('/ping', GetPing);
 
-  THorse.Listen(9000, OnListen);
+  THorse.Listen(9000);
 end.
