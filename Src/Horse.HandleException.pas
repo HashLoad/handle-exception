@@ -55,7 +55,7 @@ begin
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('code', {$IF DEFINED(FPC)}TJSONIntegerNumber{$ELSE}TJSONNumber{$ENDIF}.Create(E.Code));
       end;
-      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Error);
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('message', E.Error);
       if not E.Hint.Trim.IsEmpty then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('hint', E.Hint);
