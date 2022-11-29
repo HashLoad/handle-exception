@@ -43,22 +43,26 @@ begin
     on E: EHorseException do
     begin
       LJSON := TJSONObject.Create;
-      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Error);
+      if E.&Type <> TMessageType.Default then
+      begin
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
+      end;
       if not E.Title.Trim.IsEmpty then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('title', E.Title);
-      end;
-      if not E.&Unit.Trim.IsEmpty then
-      begin
-        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('unit', E.&Unit);
       end;
       if E.Code <> 0 then
       begin
         LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('code', {$IF DEFINED(FPC)}TJSONIntegerNumber{$ELSE}TJSONNumber{$ENDIF}.Create(E.Code));
       end;
-      if E.&Type <> TMessageType.Default then
+      LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('message', E.Error);
+      if not E.Hint.Trim.IsEmpty then
       begin
-        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('type', GetEnumName(TypeInfo(TMessageType), Integer(E.&Type)));
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('hint', E.Hint);
+      end;
+      if not E.&Unit.Trim.IsEmpty then
+      begin
+        LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('unit', E.&Unit);
       end;
       SendError(Res, LJSON, Integer(E.Status));
     end;
