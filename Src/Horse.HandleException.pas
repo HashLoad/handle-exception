@@ -42,13 +42,13 @@ begin
       raise;
     on E: EHorseException do
     begin
-      LJSON := TJSONObject.ParseJSONValue(E.ToJSON) as TJSONObject;
+      LJSON := {$IF DEFINED(FPC)}GetJSON(E.ToJSON) as TJSONObject{$ELSE}TJSONObject.ParseJSONValue(E.ToJSON) as TJSONObject{$ENDIF};
       SendError(Res, LJSON, Integer(E.Status));
     end;
     on E: Exception do
     begin
       LStatus := Res.Status;
-      if LStatus < Integer(THTTPStatus.BadRequest) then
+      if (LStatus < Integer(THTTPStatus.BadRequest)) then
         LStatus := Integer(THTTPStatus.InternalServerError);
       LJSON := TJSONObject.Create;
       LJSON.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Message);
