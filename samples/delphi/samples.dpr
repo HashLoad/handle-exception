@@ -11,7 +11,7 @@ begin
     .Use(HandleException);
 
   THorse.Get('/ping',
-    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    procedure(Req: THorseRequest; Res: THorseResponse)
     begin
       raise EHorseException.New.Error('My Error!');
     end);

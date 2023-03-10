@@ -1,12 +1,12 @@
 {
 	"name": "handle-exception",
 	"description": "",
-	"version": "1.0.0",
+	"version": "0.1.8",
 	"homepage": "",
 	"mainsrc": "src/",
 	"projects": [],
 	"dependencies": {
-		"github.com/hashload/horse": "^3.0.0",
-		"github.com/hashload/jhonson": "^1.1.4"
+		"github.com/hashload/horse": "^3.1.0",
+		"github.com/hashload/jhonson": "^1.1.5"
 	}
 }
