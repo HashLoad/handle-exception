@@ -100,7 +100,7 @@ end;
 
 function HandleException: THorseCallback; overload;
 begin
-  Result := Middleware;
+  Result := HandleException(nil);
 end;
 
 function HandleException(const ACallback: TInterceptExceptionCallback): THorseCallback; overload;
