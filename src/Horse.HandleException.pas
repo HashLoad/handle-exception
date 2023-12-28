@@ -1,40 +1,35 @@
 unit Horse.HandleException;
 
 {$IF DEFINED(FPC)}
-{$MODE DELPHI}{$H+}
+  {$MODE DELPHI}{$H+}
 {$ENDIF}
 
 interface
 
 uses
   {$IF DEFINED(FPC)}
-  SysUtils, fpjson,
+  SysUtils,
+  fpjson,
+  TypInfo,
   {$ELSE}
-  System.SysUtils, System.JSON,
+  System.SysUtils,
+  System.JSON,
+  System.TypInfo,
   {$ENDIF}
-  Horse, Horse.Commons;
+  Horse,
+  Horse.Commons;
 
 type
 {$IF DEFINED(FPC)}
-  TInterceptExceptionCallback = {$IF DEFINED(HORSE_FPC_FUNCTIONREFERENCES)}reference to {$ENDIF}procedure(AException: Exception; AResponse: THorseResponse; var ASendException: Boolean);
+  TInterceptExceptionCallback = procedure(const E: Exception; const Req: THorseRequest; const Res: THorseResponse; var ASendException: Boolean);
 {$ELSE}
-  TInterceptExceptionCallback = reference to procedure(AException: Exception; AResponse: THorseResponse; var ASendException: Boolean);
+  TInterceptExceptionCallback = reference to procedure(const E: Exception; const Req: THorseRequest; const Res: THorseResponse; var ASendException: Boolean);
 {$ENDIF}
 
 function HandleException: THorseCallback; overload;
 function HandleException(const ACallback: TInterceptExceptionCallback): THorseCallback; overload;
-procedure Middleware(Req: THorseRequest; Res: THorseResponse; Next: {$IF DEFINED(FPC)}TNextProc{$ELSE}TProc{$ENDIF});
-
-function FormatExceptionJSON(AException: Exception): TJSONObject;
 
 implementation
-
-uses
-  {$IF DEFINED(FPC)}
-  TypInfo;
-  {$ELSE}
-  System.TypInfo;
-  {$ENDIF}
 
 var
   InterceptExceptionCallback: TInterceptExceptionCallback = nil;
@@ -44,19 +39,19 @@ begin
   ARes.Send<TJSONObject>(AJson).Status(AStatus);
 end;
 
-function FormatExceptionJSON(AException: Exception): TJSONObject;
+function FormatExceptionJSON(const E: Exception): TJSONObject;
 var
   LEHorseException: EHorseException;
 begin
-  if (AException is EHorseException) then
+  if (E is EHorseException) then
   begin
-    LEHorseException := (AException as EHorseException);
+    LEHorseException := (E as EHorseException);
     Result := {$IF DEFINED(FPC)}GetJSON(LEHorseException.ToJSON) as TJSONObject{$ELSE}TJSONObject.ParseJSONValue(LEHorseException.ToJSON) as TJSONObject{$ENDIF};
   end
   else
   begin
     Result := TJSONObject.Create;
-    Result.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', AException.Message);
+    Result.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}('error', E.Message);
   end;
 end;
 
@@ -64,7 +59,7 @@ procedure Middleware(Req: THorseRequest; Res: THorseResponse; Next: {$IF DEFINED
 var
   LJSON: TJSONObject;
   LStatus: Integer;
-  lSendException: Boolean;
+  LSendException: Boolean;
 begin
   try
     Next();
@@ -74,24 +69,21 @@ begin
       if (E is EHorseCallbackInterrupted) then
         raise;
 
-      lSendException := True;
+      LSendException := True;
       if Assigned(InterceptExceptionCallback) then
-        InterceptExceptionCallback(E, Res, lSendException);
+        InterceptExceptionCallback(E, Req, Res, LSendException);
 
-      if not lSendException then
+      if not LSendException then
         Exit;
 
+      LJSON := FormatExceptionJSON(E);
       if (E is EHorseException) then
-      begin
-        LJSON := FormatExceptionJSON(E);
-        SendException(Res, LJSON, Integer(EHorseException(E).Status));
-      end
+        SendException(Res, LJSON, Integer(EHorseException(E).Status))
       else
       begin
         LStatus := Res.Status;
         if (LStatus < Integer(THTTPStatus.BadRequest)) then
           LStatus := Integer(THTTPStatus.InternalServerError);
-        LJSON := FormatExceptionJSON(E);
         SendException(Res, LJSON, LStatus);
       end;
     end;
